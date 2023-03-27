@@ -13,17 +13,17 @@ class Node:
     def __str__(self):
         return "pos: " + str(self.pos) + ", dir: " + str(self.dir) + ";"    # return the position and direction of the node
 class Maze:
-    def __init__(self, pos, size, dir, life_circle, main_color = ""):
+    def __init__(self, init_pos, size, init_dir, life_circle, main_color = ""):
         self.offset = 20 # set the margin
         size[0] += self.offset  # update the margin
         size[1] -= self.offset
         size[2] += self.offset
         size[3] -= self.offset
         self.size = size    # the size of the pattern
-        pos[0] += self.offset   # update the margin
-        pos[1] -= self.offset
-        self.init_pos = pos # the position where the turtle starts
-        self.init_dir = dir # the direction where the turtle starts
+        init_pos[0] += self.offset   # update the margin
+        init_pos[1] -= self.offset
+        self.init_pos = init_pos # the position where the turtle starts
+        self.init_dir = init_dir # the direction where the turtle starts
         self.node_li = [Node(self.init_pos, self.init_dir)] # the node array
         self.random_color = copy.copy(random_color)
         if main_color:  # if color is given, that increaing its possibility of being picked
@@ -209,43 +209,13 @@ class Maze:
         turtle.pu()
     def update_pos(self, old_pos, dir, length): # update the position
         def get_2d_vector(yaw, length):
-            # Convert the angle to radians
-            yaw_rad = math.radians(yaw)
-
-            # Calculate the x and y components of the vector
-            x = length * math.sin(yaw_rad)
+            yaw_rad = math.radians(yaw) # Convert the angle to radians
+            x = length * math.sin(yaw_rad) # Calculate the x and y components of the vector
             y = length * math.cos(yaw_rad)
-
-            # Return the vector as a tuple
             return (x, y)
-        # print("dir: ",dir)
         v = get_2d_vector(yaw=dir, length=length)
         # Calculate the new point by adding the vector to the point
         old_pos = [p_i + v_i for p_i, v_i in zip(old_pos, v)]
-        # if dir < 0: # find the current facing direction
-        #     res = (360 - abs(dir)) % 360
-        # else: res = dir % 360
-        # match res:
-        #     case 0:
-        #         old_pos[0] += length
-        #     case 45:
-        #         old_pos[0] += length * (2 ** 0.5)
-        #         old_pos[1] += length * (2 ** 0.5)
-        #     case 90:
-        #         old_pos[1] += length
-        #     case 135:
-        #         old_pos[0] -= length * (2 ** 0.5)
-        #         old_pos[1] += length * (2 ** 0.5)
-        #     case 180:
-        #         old_pos[0] -= length
-        #     case 225:
-        #         old_pos[0] -= length * (2 ** 0.5)
-        #         old_pos[1] -= length * (2 ** 0.5)
-        #     case 270:
-        #         old_pos[1] -= length
-        #     case 315:
-        #         old_pos[0] += length * (2 ** 0.5)
-        #         old_pos[1] -= length * (2 ** 0.5)
         return old_pos
     def is_finish(self): # check if the lifecircle ends
         return True if not bool(self.node_li) or self.index[0] == self.life_circle else False
